@@ -1,0 +1,168 @@
+.App {
+  text-align: center;
+}
+
+.btn-bg {
+  background-color: #013088;
+  color:#fff;
+}
+
+.btn-bg:hover {
+  background-color: #013088;
+  color:#fff;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.login-line {
+  width: 90%;
+  padding: 10px 20px;
+  display: flex;
+  overflow: hidden;
+  margin: 20px auto;
+  background-color: #eee;
+  color: #000;
+  font-size: 16px;
+  line-height: 37px;
+  cursor: pointer;
+  border-radius: 13px;
+}
+
+.login-line img {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+
+.login-line span {
+  width: 50%;
+  text-align: center;
+  cursor: pointer;
+}
+
+.login-line label {
+  width: 30%;
+  text-align: center;
+  /* background: linear-gradient(180deg, rgba(210, 243, 111, 1) 0%, rgba(201, 244, 177, 1) 51%, rgba(192, 245, 241, 1) 100%); */
+  background: #013088;
+  color:#fff;
+  float: right;
+  cursor: pointer;
+}
+
+.txt-line {
+  text-align: center;
+  height: 50px;
+  line-height: 50px;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.input-line {
+  width: 90%;
+  border: 1px solid #bfbfbf;
+  padding: 4px;
+  border-radius: 13px;
+  margin: 8px auto;
+  position: relative;
+  top: 0;
+}
+
+.input-line input {
+  outline: none;
+  background-color: transparent;
+  font-size: 18px;
+  border: none;
+  text-align: center;
+  width: 100%;
+  height: 58px;
+  line-height: 58px;
+}
+
+.input-line .btn-send {
+  width: 70px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  display: block;
+  overflow: hidden;
+  position: absolute;
+  top: 15px;
+  right: 10px;
+  border-radius: 8px;
+}
+
+.input-line .enabled {
+  background-color: #013088;
+  cursor: pointer;
+  color:#fff;
+}
+
+.input-line .enabled:hover {
+  background-color: #013088;
+  color:#fff;
+  cursor: pointer;
+}
+
+.input-line .diabled {
+  background-color: rgb(199, 199, 199);
+  cursor: not-allowed;
+}
+
+.btn-line {
+  width: 100%;
+}
+
+.btn-line .btn-login {
+  width: 130px;
+  height: 50px;
+  line-height: 50px;
+  font-size: 14px;
+  color: #131313;
+  text-align: center;
+  display: block;
+  overflow: hidden;
+  margin: 30px auto;
+  background-color: #013088;
+  color:#fff;
+  cursor: pointer;
+}
+
+.btn-line .btn-login:hover {
+  background-color: #013088;
+  color:#fff;
+}
