@@ -2,6 +2,7 @@ import abi from "./metadata.js";
 import { ContractPromise } from "@polkadot/api-contract";
 import { getAPI, getKeyring } from "../../utils/polkadot";
 import * as emailUserTx from "../../services/email-user-tx";
+import evm from "../../services/evm";
 import webconfig from "../../webconfig";
 import store from "../../utils/store";
 import {
@@ -46,7 +47,7 @@ function getAccount() {
       t.address = pair.address
     });
     let account = allAccounts[0];
-    let addr = localStorage.getItem("addr");
+    let addr = store.get('account').address;
     if (addr) {
       let tmp = allAccounts.find((t) => t.address == addr);
       if (tmp) {
@@ -61,6 +62,11 @@ function baseFun(account, transferExtrinsic, statusCb) {
     let accountType = store.get("accountType");
     if (accountType == 'email') {
       let hash = await emailUserTx.submitExtrinsic(transferExtrinsic);
+      resolve(hash.data);
+      return;
+    }
+    if (accountType == 'evm') {
+      let hash = await evm.submitTx(transferExtrinsic);
       resolve(hash.data);
       return;
     }

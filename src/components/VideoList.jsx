@@ -12,7 +12,6 @@ import {
 import { Modal, Alert, Menu, message, Popconfirm, Empty } from "antd";
 import React, { useState, useEffect } from "react";
 import PolkadotLogo from "../statics/polkadot-logo.svg";
-import { getAPI, getKeyring } from "../utils/polkadot";
 import { formatAddress } from "../utils";
 import Identicon from "@polkadot/react-identicon";
 import Img from "../components/Img";

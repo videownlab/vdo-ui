@@ -48,7 +48,7 @@ export function formatBalance(balance) {
   if (isNaN(balance)) {
     return balance;
   }
-  return fixed(balance / 1000000000000);
+  return fixed(balance / 1e18);
 }
 export function formatAddress(addr) {
   if (!addr) return "";

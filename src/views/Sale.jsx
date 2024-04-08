@@ -21,12 +21,9 @@ import {
   Empty,
 } from "antd";
 import React, { useState, useEffect } from "react";
-import PolkadotLogo from "../statics/polkadot-logo.svg";
-import { getAPI, getKeyring } from "../utils/polkadot";
-import Identicon from "@polkadot/react-identicon";
-import Img from "../components/Img";
 import { alist, changeStatus } from "../services/nft";
 import * as util from "../utils";
+import store from "../utils/store";
 import { formatImgUrl, formatterSize, formatAddress } from "../utils/formatter";
 import CessMiniLogo from "../statics/imgs/cess-mini-logo.png";
 import {
@@ -46,7 +43,7 @@ function Home({ className }) {
   const [toAddr, setToAddr] = useState("");
 
   useEffect(() => {
-    let addr = localStorage.getItem("addr");
+    let addr = store.get('account').address;
     setFromAddr(addr);
   }, []);
   const onInput = (e) => {

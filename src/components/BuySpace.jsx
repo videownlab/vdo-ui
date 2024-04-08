@@ -57,6 +57,7 @@ import {
   deleteFile,
 } from "../services/oss";
 import * as emailUserTx from "../services/email-user-tx";
+import evm from "../services/evm";
 
 let ignore = false;
 let api = null;
@@ -107,7 +108,7 @@ const SearchBar = ({ className }) => {
   };
 
   const getMyAddr = () => {
-    let a = localStorage.getItem("addr");
+    let a =  store.get('account').address;
     if (!a) {
       return false;
     }
@@ -166,7 +167,10 @@ const SearchBar = ({ className }) => {
     }
     let accountAddr = addr;
     if (!addr) {
-      accountAddr = localStorage.getItem("addr");
+      accountAddr = store.get('account').address;
+    }
+    if(!api){
+      await myinit();
     }
     const bb = await api.query.system.account(accountAddr);
     let v = formatBalance(bb.data.free);
@@ -225,6 +229,17 @@ const SearchBar = ({ className }) => {
         ret = await emailUserTx.buySpace(inputValue);
       } else {
         ret = await emailUserTx.renewalSpace(inputValue);
+      }
+      await util.sleep(2000);
+      queryMySpace();
+      util.sleep(2000).then(queryMySpace);
+      util.sleep(4000).then(queryMySpace);
+      util.sleep(6000).then(queryMySpace);
+    }else if (accountType == 'evm') {
+      if (priceType == "Purchase" || priceType == "Upgrade") {
+        ret = await evm.buySpace(inputValue);
+      } else {
+        ret = await evm.renewalSpace(inputValue);
       }
       await util.sleep(2000);
       queryMySpace();

@@ -79,7 +79,7 @@ export async function controlGetActivityList(setFun) {
   return items;
 }
 export async function controlTransfer(fileHash, toAddr) {
-  let fromAddr = localStorage.getItem("addr");
+  let fromAddr =store.get('account').address;
   if (!toAddr) {
     util.alert("Recipient address is empty.");
     return false;
@@ -142,7 +142,7 @@ export async function controlMint(fileHash) {
   }
 }
 export async function controlBuy(fileHash, price) {
-  let myAddr = localStorage.getItem("addr");
+  let myAddr = store.get('account').address;
   price = parseFloat(price) * 1000000000000;
   util.loading(true);
   let txHash = await contractBuy(fileHash, price, function (status) {

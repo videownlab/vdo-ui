@@ -12,9 +12,10 @@ import {
 
 import React, { useState, useEffect } from "react";
 import PolkadotLogo from "../statics/polkadot-logo.svg";
-import { getAPI, getKeyring } from "../utils/polkadot";
+import { getAPI } from "../utils/polkadot";
 import Identicon from "@polkadot/react-identicon";
 import Img from "../components/Img";
+import store from "../utils/store";
 import { formatBalance, formatterSize } from "../utils/formatter";
 import { alist, transfer } from "../services/nft";
 import * as util from "../utils";
@@ -94,7 +95,7 @@ function Home({ className }) {
   const [buySpacing, setBuySpacing] = useState(false);
 
   useEffect(() => {
-    let addr = localStorage.getItem("addr");
+    let addr = store.get('account').address;
     setAddr(addr);
     querySpace(addr);
     controlGetOneList(fileHash, setDetail);
@@ -103,7 +104,7 @@ function Home({ className }) {
   //get wallet address
   const getAddr = (ignoreAlert) => {
     console.log("******************************getAddr start", run);
-    let a = localStorage.getItem("addr");
+    let a = store.get('account').address;
     if (!a) {
       run++;
       if (run != 3 && !ignoreAlert) {

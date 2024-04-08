@@ -40,6 +40,7 @@ import MinerLogo from "../statics/imgs/miner.svg";
 import { encodeAddress } from "@polkadot/util-crypto";
 import { create } from "../services/nft";
 import * as emailUserTx from "../services/email-user-tx";
+import evm from "../services/evm";
 import {
   web3Accounts,
   web3Enable,
@@ -116,7 +117,7 @@ function Home(props) {
   //get wallet address
   const getAddr = (ignoreAlert) => {
     console.log("******************************getAddr start", run);
-    let a = localStorage.getItem("addr");
+    let a = store.get('account');
     if (!a) {
       run++;
       if (run != 3 && !ignoreAlert) {
@@ -124,6 +125,7 @@ function Home(props) {
       }
       return false;
     }
+    a=a.address;
     // let address = ("0x263158a10b39debac59bd1239bc64fb4bd678f507814d24f59efd46279111c71", 11330)
     setAddr(a);
     addressG = a;
@@ -142,6 +144,19 @@ function Home(props) {
     let accountType = store.get("accountType");
     if (accountType == 'email') {
       let ret = await emailUserTx.authorize();
+      startAuthProgress(100);
+      util.loading(false);
+      setSpaceAuthing(false);
+      setSpaceAuth(true);
+      if (ret.msg == 'ok') {
+        //ok       
+        store.set("spaceAuth", addressG);
+        startQuerySpace();
+      }
+      return;
+    }
+    if (accountType == 'evm') {
+      let ret = await evm.authorize();
       startAuthProgress(100);
       util.loading(false);
       setSpaceAuthing(false);
@@ -269,7 +284,8 @@ function Home(props) {
   const onChangeAbout = (e) => {
     setAbout(e.target.value);
   };
-  const onSubmit = () => {
+  const onSubmit =async () => {
+    await querySpace();
     if (!name || name.length < 4) {
       return util.alert("NFT name is required and min length 4 char");
     }
@@ -280,7 +296,7 @@ function Home(props) {
       return util.alert("File hash is not ready.");
     }
     if (!cover) {
-      return util.alert("Please upload conver image.");
+      return util.alert("Please upload cover image.");
     }
     if (!space || !space.remainingSpace) {
       return util.alert("Please purchase space first");

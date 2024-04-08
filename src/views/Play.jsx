@@ -11,6 +11,7 @@ import {
 } from "@ant-design/icons";
 import { Modal, Menu, message, Popconfirm, Button, Empty } from "antd";
 import React, { useState, useEffect } from "react";
+import store from "../utils/store";
 import {
   controlGetList,
   controlGetActivityList,
@@ -22,9 +23,6 @@ import {
 import { addViews } from "../services/nft";
 import { getFileState } from "../services/video-api";
 import CessMiniLogo from "../statics/imgs/cess-mini-logo.png";
-import { getAPI, getKeyring } from "../utils/polkadot";
-import { formatAddress } from "../utils";
-import { formatBalance } from "../utils/formatter";
 import Identicon from "@polkadot/react-identicon";
 import Img from "../components/Img";
 import VideoList from "../components/VideoList";
@@ -66,7 +64,7 @@ function Home(props) {
       }
     }
     main();
-    let a = localStorage.getItem("addr");
+    let a = store.get('account').address;
     setAddr(a);
     myAddr = a;
     setTimeout(async () => {

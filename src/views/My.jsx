@@ -20,14 +20,13 @@ import {
   Empty,
 } from "antd";
 import React, { useState, useEffect } from "react";
-import PolkadotLogo from "../statics/polkadot-logo.svg";
-import { getAPI, getKeyring } from "../utils/polkadot";
 import Identicon from "@polkadot/react-identicon";
 import Img from "../components/Img";
 import { nftMint } from "../services/nft";
 import * as util from "../utils";
 import { formatImgUrl, formatterSize, formatAddress } from "../utils/formatter";
 import CessMiniLogo from "../statics/imgs/cess-mini-logo.png";
+import store from "../utils/store";
 import {
   web3Accounts,
   web3Enable,
@@ -255,7 +254,7 @@ function Home({ className }) {
     load();
   };
   const load = () => {
-    let a = localStorage.getItem("addr");
+    let a = store.get('account').address;
     setAddr(a);
     loadNftList(a);
     loadActivity(a);

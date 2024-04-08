@@ -22,10 +22,10 @@ import {
 } from "antd";
 import React, { useState, useEffect } from "react";
 import PolkadotLogo from "../statics/polkadot-logo.svg";
-import { getAPI, getKeyring } from "../utils/polkadot";
 import Identicon from "@polkadot/react-identicon";
 import Img from "../components/Img";
 import * as util from "../utils";
+import store from "../utils/store";
 import { formatImgUrl, formatterSize, formatAddress } from "../utils/formatter";
 import CESSCoin from "../components/CESSCoin";
 import {
@@ -104,7 +104,7 @@ function Home({ className }) {
     setDataSourceActivity(list);
   };
   useEffect(() => {
-    let addr = localStorage.getItem("addr");
+    let addr = store.get('account').address;
     setAddr(addr);
     myAddr = addr;
     load();

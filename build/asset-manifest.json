@@ -1,7 +1,8 @@
 {
   "files": {
-    "main.css": "/static/css/main.56f27a00.css",
-    "main.js": "/static/js/main.4f2635d9.js",
+    "main.css": "/static/css/main.84bc0a4e.css",
+    "main.js": "/static/js/main.e4df5f1f.js",
+    "static/js/396.44b7acf3.chunk.js": "/static/js/396.44b7acf3.chunk.js",
     "static/js/787.2f8d59ac.chunk.js": "/static/js/787.2f8d59ac.chunk.js",
     "static/media/fontawesome-webfont.svg?v=4.7.0": "/static/media/fontawesome-webfont.c1e38fd9e0e74ba58f7a.svg",
     "static/media/fontawesome-webfont.eot": "/static/media/fontawesome-webfont.8b43027f47b20503057d.eot",
@@ -13,12 +14,13 @@
     "static/media/polkadot-logo.svg": "/static/media/polkadot-logo.9c7fb93c1d0abd386e546abe94dccc98.svg",
     "static/media/miner.svg": "/static/media/miner.4770ac4c7f6df60dd427e79239f408f3.svg",
     "index.html": "/index.html",
-    "main.56f27a00.css.map": "/static/css/main.56f27a00.css.map",
-    "main.4f2635d9.js.map": "/static/js/main.4f2635d9.js.map",
+    "main.84bc0a4e.css.map": "/static/css/main.84bc0a4e.css.map",
+    "main.e4df5f1f.js.map": "/static/js/main.e4df5f1f.js.map",
+    "396.44b7acf3.chunk.js.map": "/static/js/396.44b7acf3.chunk.js.map",
     "787.2f8d59ac.chunk.js.map": "/static/js/787.2f8d59ac.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.56f27a00.css",
-    "static/js/main.4f2635d9.js"
+    "static/css/main.84bc0a4e.css",
+    "static/js/main.e4df5f1f.js"
   ]
 }

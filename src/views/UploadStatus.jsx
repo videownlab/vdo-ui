@@ -23,7 +23,6 @@ import {
 } from "antd";
 import React, { useState, useEffect } from "react";
 import PolkadotLogo from "../statics/polkadot-logo.svg";
-import { getAPI, getKeyring } from "../utils/polkadot";
 import Identicon from "@polkadot/react-identicon";
 import Img from "../components/Img";
 import * as util from "../utils";
@@ -115,7 +114,7 @@ function Home({ className }) {
     setState(step);
   };
   useEffect(() => {
-    let addr = localStorage.getItem("addr");
+    let addr = store.get('account').address;
     setAddr(addr);
     let obj = store.get("uploading");
     if (!obj) {

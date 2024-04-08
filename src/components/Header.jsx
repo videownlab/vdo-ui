@@ -38,7 +38,8 @@ import {
 } from "antd";
 
 import PolkadotLogo from "../statics/polkadot-logo.svg";
-import { getAPI, getKeyring, toPublickKey } from "../utils/polkadot";
+import { getAPI, toPublickKey } from "../utils/polkadot";
+import evm from "../services/evm";
 import { formatAddress, formatAddressLong } from "../utils/formatter";
 import { formatBalance } from "../utils/formatter";
 import Identicon from "@polkadot/react-identicon";
@@ -79,10 +80,12 @@ const items = [
 
 let timeout = null;
 let count = 0;
+let lock = false;
 
 function Header({ className }) {
   let navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [connecting, setConnecting] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
   const [keyword, setKeyword] = useState();
   const [isModalOpen, setModalOpen] = useState(false);
@@ -97,21 +100,24 @@ function Header({ className }) {
   const [authCode, setAuthCode] = useState();
   const [countDown, setCountDown] = useState(0);
 
+  // accountkind:1=email,2=polkdot,3=evm
 
   const [config, setConfig] = useState({});
 
   useEffect(() => {
     getAPI().then((t) => {
-      if (localStorage.getItem("addr")) {
-        // onLogin();
-      }
     }, console.log);
     setConfig({
       videoApiUrl: webconfig.videoApiUrl,
       apiUrl: webconfig.apiUrl,
-      contractAddress: webconfig.contractAddress,
-      nodeURL: webconfig.wsnode.nodeURL,
+      contractAddress: webconfig.contractAddress
     });
+    let accs = store.get("accounts");
+    if (accs && accs.length > 0) {
+      setAccounts(accs);
+      saveAccount(accs[0]);
+    }
+    window.setConnecting = setConnecting;
   }, []);
 
   const toggleCollapsed = () => {
@@ -131,6 +137,16 @@ function Header({ className }) {
   const onShowLoginBox = () => {
     setModalOpen(true);
   };
+  const queryBalance = async (account) => {
+    let api = await getAPI();
+    const { nonce, data: balance } = await api.query.system.account(account.address);
+    console.log("balance", balance);
+    console.log(`balance of ${balance.free} and a nonce of ${nonce}`);
+    account.nonce = nonce;
+    account.balance = formatBalance(balance);
+    account.balance_str = account.balance + " TCESS";
+    return account;
+  }
   const onLogin = async () => {
     try {
       setLoading(true);
@@ -174,7 +190,7 @@ function Header({ className }) {
             }
           });
         }
-        let lastAddr = localStorage.getItem("addr");
+        let lastAddr = store.get('account').address;
         accounts = accounts.sort((t1, t2) => t2.balance - t1.balance);
         let index = 0;
         if (lastAddr) {
@@ -226,6 +242,60 @@ function Header({ className }) {
       setLoading(false);
     }
   };
+  const onLoginByEvm = async () => {
+    try {
+      if (lock) return;
+      lock = true;
+      setLoading(true);
+      let ret = await evm.connectEvmWallet();
+      lock = false;
+      if (ret.msg != 'ok') {
+        return antdHelper.alertError(ret.msg);
+      }
+      let account = ret.account;
+      setAccounts([account]);
+      saveAccount(account);
+      antdHelper.notiOK("Login success");
+      setModalOpen(false);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      lock = false;
+      setLoading(false);
+    }
+  }
+  const onLoginByEmail = async (e) => {
+    try {
+      if (!email) {
+        return antdHelper.alertError("email error");
+      }
+      if (!authCode) {
+        return antdHelper.alertError("AuthCode error");
+      }
+      setLoading(true);
+      let ret = await loginByEmail(email, authCode);
+      setLoading(false);
+      console.log({ ret });
+      if (ret.ok) {
+        antdHelper.notiOK('Login success');
+        store.set("accountType", 'email');
+        store.set("token", ret.ok.token);
+        setModalOpen(false);
+        let account = { address: ret.ok.walletAddress };
+        account = await queryBalance(account);
+        setAccounts([account]);
+        store.set("accounts", [account]);
+        saveAccount(account);
+        localStorage.setItem("addr", account.address);
+      } else if (ret.error?.msg) {
+        antdHelper.alertError(ret.error.msg);
+      } else {
+        antdHelper.alertError('Login fail');
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
   const saveAccount = async (account) => {
     setAccount(account);
     store.set("account", account);
@@ -256,6 +326,7 @@ function Header({ className }) {
     saveAccount(null);
     setAccounts(null);
     setIsAccountsModalOpen(false);
+    navigate('/');
   };
   const onSwitchAccount = (item) => {
     saveAccount(item);
@@ -281,37 +352,6 @@ function Header({ className }) {
   }
   const onInputAuthCode = (e) => {
     setAuthCode(e.target.value);
-  }
-  const onLoginByEmail = async (e) => {
-    try {
-      if (!email) {
-        return antdHelper.alertError("email error");
-      }
-      if (!authCode) {
-        return antdHelper.alertError("AuthCode error");
-      }
-      setLoading(true);
-      let ret = await loginByEmail(email, authCode);
-      setLoading(false);
-      console.log({ ret });
-      if (ret.ok) {
-        antdHelper.notiOK('Login success');
-        store.set("accountType", 'email');
-        store.set("token", ret.ok.token);
-        setModalOpen(false);
-        let account = { address: ret.ok.walletAddress };
-        setAccounts([account]);
-        store.set("accounts", [account]);
-        saveAccount(account);
-        localStorage.setItem("addr", account.address);
-      } else if (ret.error?.msg) {
-        antdHelper.alertError(ret.error.msg);
-      } else {
-        antdHelper.alertError('Login fail');
-      }
-    } catch (e) {
-      console.log(e);
-    }
   }
   const startCountDown = () => {
     timeout = setInterval(function () {
@@ -350,6 +390,7 @@ function Header({ className }) {
 
   return (
     <div className={className}>
+      {connecting && <div className="connecting">connecting...</div>}
       <div className="abs-header">
         <div className="header-content">
           <span className="h-col h-col-1 menu-btn">
@@ -404,7 +445,7 @@ function Header({ className }) {
               <span
                 className="h-btn"
                 onClick={() => showSpaceBox(true)}
-                style={{ backgroundColor: "#b8e6ff" }}
+                style={{ backgroundColor: "rgb(9 98 147)" }}
               >
                 <DatabaseOutlined /> My Space
               </span>
@@ -432,7 +473,7 @@ function Header({ className }) {
             className="nav-menu"
             onClick={onMenuClick}
           />
-          <div
+          {/* <div
             className="h-bottom-btn"
             onClick={() => {
               setIsModalConfig(true);
@@ -440,7 +481,7 @@ function Header({ className }) {
             }}
           >
             <UnorderedListOutlined /> Config API URL
-          </div>
+          </div> */}
         </div>
       ) : (
         ""
@@ -548,9 +589,20 @@ function Header({ className }) {
           </p>
           <p></p>
           <div className="login-line" onClick={onLogin}>
-            <img src={PolkadotLogo} />
-            <span>polkadot{"{.js}"} extension</span>
-            <label>Polkadot</label>
+            <img className="dot-log" src={PolkadotLogo} />
+            <label>Connect to polkadot{"{.js}"} extension</label>
+          </div>
+          <div className="txt-line">Or</div>
+          <p></p>
+          <div className="login-line" onClick={onLoginByEvm}>
+            <div>
+              <img src={process.env.PUBLIC_URL + "/wallet-logo/ok.png"} />
+              <img src={process.env.PUBLIC_URL + "/wallet-logo/coinbase.svg"} />
+              <img src={process.env.PUBLIC_URL + "/wallet-logo/imtoken.svg"} />
+              <img src={process.env.PUBLIC_URL + "/wallet-logo/matemask.svg"} />
+              <img src={process.env.PUBLIC_URL + "/wallet-logo/sub.png"} />
+            </div>
+            <label>Connect to Evm wallet</label>
           </div>
           <div className="txt-line">Or</div>
           <div className="input-line">
@@ -696,6 +748,23 @@ export default styled(Header)`
     clear: both;
     width: 100%;
   }
+  .connecting{
+    position: fixed;
+    bottom: 3px;
+    right: 3px;
+    z-index: 99999;
+    background-color: #2196F3;
+    color: #fff;
+    width: 170px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    background-image: url(/img/loading.gif);
+    background-repeat: no-repeat;
+    background-size: 16px;
+    background-position: 22px;
+    font-size: 14px;
+  }
   .abs-header .header-content .search-box .search-btn {
     padding-left: 10px;
   }
@@ -709,7 +778,7 @@ export default styled(Header)`
     position: fixed;
     color: #fff;
     clear: both;
-    z-index: 999999;
+    z-index: 99;
     .header-content {
       display: block;
       overflow: hidden;
