@@ -254,7 +254,7 @@ function Home({ className }) {
     load();
   };
   const load = () => {
-    let a = store.get('account').address;
+    let a = store.getAddress();
     setAddr(a);
     loadNftList(a);
     loadActivity(a);

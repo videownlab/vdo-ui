@@ -95,7 +95,7 @@ function Home({ className }) {
   const [buySpacing, setBuySpacing] = useState(false);
 
   useEffect(() => {
-    let addr = store.get('account').address;
+    let addr = store.getAddress();
     setAddr(addr);
     querySpace(addr);
     controlGetOneList(fileHash, setDetail);
@@ -104,7 +104,7 @@ function Home({ className }) {
   //get wallet address
   const getAddr = (ignoreAlert) => {
     console.log("******************************getAddr start", run);
-    let a = store.get('account').address;
+    let a = store.getAddress();
     if (!a) {
       run++;
       if (run != 3 && !ignoreAlert) {

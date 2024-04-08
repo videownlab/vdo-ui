@@ -43,7 +43,7 @@ function Home({ className }) {
   const [toAddr, setToAddr] = useState("");
 
   useEffect(() => {
-    let addr = store.get('account').address;
+    let addr = store.getAddress();
     setFromAddr(addr);
   }, []);
   const onInput = (e) => {

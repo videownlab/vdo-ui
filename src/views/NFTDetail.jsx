@@ -104,7 +104,7 @@ function Home({ className }) {
     setDataSourceActivity(list);
   };
   useEffect(() => {
-    let addr = store.get('account').address;
+    let addr = store.getAddress();
     setAddr(addr);
     myAddr = addr;
     load();

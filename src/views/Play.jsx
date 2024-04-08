@@ -64,7 +64,7 @@ function Home(props) {
       }
     }
     main();
-    let a = store.get('account').address;
+    let a = store.getAddress();
     setAddr(a);
     myAddr = a;
     setTimeout(async () => {

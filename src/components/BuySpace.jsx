@@ -108,7 +108,7 @@ const SearchBar = ({ className }) => {
   };
 
   const getMyAddr = () => {
-    let a =  store.get('account').address;
+    let a =  store.getAddress();
     if (!a) {
       return false;
     }
@@ -167,7 +167,7 @@ const SearchBar = ({ className }) => {
     }
     let accountAddr = addr;
     if (!addr) {
-      accountAddr = store.get('account').address;
+      accountAddr = store.getAddress();
     }
     if(!api){
       await myinit();

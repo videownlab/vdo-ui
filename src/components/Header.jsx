@@ -190,7 +190,7 @@ function Header({ className }) {
             }
           });
         }
-        let lastAddr = store.get('account').address;
+        let lastAddr = store.getAddress();
         accounts = accounts.sort((t1, t2) => t2.balance - t1.balance);
         let index = 0;
         if (lastAddr) {

@@ -114,7 +114,7 @@ function Home({ className }) {
     setState(step);
   };
   useEffect(() => {
-    let addr = store.get('account').address;
+    let addr = store.getAddress();
     setAddr(addr);
     let obj = store.get("uploading");
     if (!obj) {

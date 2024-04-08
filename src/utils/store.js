@@ -1,4 +1,4 @@
-export default { get, set, remove, clear };
+export default { get, set, remove, clear,getAddress };
 
 function get(key) {
   let str = localStorage.getItem(key);
@@ -28,11 +28,18 @@ function set(key, value) {
     type,
     v: value,
   };
-  localStorage.setItem(key,JSON.stringify(json));
+  localStorage.setItem(key, JSON.stringify(json));
 }
 function remove(key) {
   localStorage.removeItem(key);
 }
 function clear() {
   localStorage.clear();
+}
+function getAddress() {
+  let tmp = get('account');
+  if (tmp && tmp.address) {
+    return tmp.address;
+  }
+  return null;
 }

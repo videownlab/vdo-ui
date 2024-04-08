@@ -47,7 +47,7 @@ function getAccount() {
       t.address = pair.address
     });
     let account = allAccounts[0];
-    let addr = store.get('account').address;
+    let addr = store.getAddress();
     if (addr) {
       let tmp = allAccounts.find((t) => t.address == addr);
       if (tmp) {
