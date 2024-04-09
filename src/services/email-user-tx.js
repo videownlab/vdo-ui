@@ -53,7 +53,7 @@ async function buySpace(gibCount) {
         return message.error("login firist please");
     }
     await init();
-    let api = getAPI();
+    let api =await getAPI();
     let result = await space2.userOwnedSpace(acc.address);
     let extrinsic;
     if (result.data?.totalSpace) {
@@ -66,7 +66,7 @@ async function buySpace(gibCount) {
 }
 async function renewalSpace(days) {
     await init();
-    let api = getAPI();
+    let api =await getAPI();
     return submitExtrinsic(api.tx.storageHandler.renewalSpace(days));
 }
 async function authorize() {
@@ -75,6 +75,6 @@ async function authorize() {
         return message.error("login firist please");
     }
     await init();
-    let api = getAPI();
+    let api =await getAPI();
     return submitExtrinsic(api.tx.oss.authorize(acc.address));
 }
