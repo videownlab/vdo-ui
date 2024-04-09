@@ -1,8 +1,10 @@
 import store from "./utils/store";
 
 let defaultConfig = {
-  videoApiUrl: "http://221.122.79.5:8081",
-  apiUrl: 'http://221.122.79.5:5001',
+  videoApiUrl: "/cmps",
+  apiUrl: '/vd',
+  // videoApiUrl: "http://221.122.79.5:8081",
+  // apiUrl: 'http://221.122.79.5:5001',
   // videoApiUrl: "http://39.108.54.98:3008",
   // apiUrl: "http://39.108.54.98:3007",
   nodeURLs: [
