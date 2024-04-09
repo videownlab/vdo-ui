@@ -713,7 +713,7 @@ function Home(props) {
                 Click or drag file to this area to upload
               </p>
               <p className="ant-upload-hint">
-                File types supported: jpg/png/gif/bmp Max size: 2MB.
+                File types supported: jpg/png/gif/bmp Max size: 8MB.
               </p>
             </Dragger>
           </div>

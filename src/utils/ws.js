@@ -9,7 +9,7 @@ export function connectStart(uploadId, onMessage, onClose) {
   wsUrl += "/upload-progress/" + uploadId;
   
 
-  wsUrl="ws://221.122.79.5:8081/upload-progress/"+uploadId;
+  wsUrl="wss://videown.io/upload-progress/"+uploadId;
 
 
   let websocket = new WebSocket(wsUrl);
