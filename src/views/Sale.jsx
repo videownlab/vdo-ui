@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import _ from "lodash";
 import { useNavigate, useParams, NavLink } from "react-router-dom";
+import BN from 'bn.js';
 import {
   PlayCircleOutlined,
   CloudUploadOutlined,
@@ -48,7 +49,7 @@ function Home({ className }) {
   }, []);
   const onInput = (e) => {
     let v = e.target.value;
-    console.log(v);
+    // console.log(v);
     setToAddr(v);
   };
   const onSubmit = async () => {
@@ -57,7 +58,8 @@ function Home({ className }) {
     }
     util.loading(true);
     setLoading(true);
-    let price = parseFloat(toAddr) * 1000000000000;
+    let price = new BN(parseFloat(toAddr), 10);
+    price = price.mul(new BN('1000000000000000000',10));
     try {
       let txHash = await contractAsk(fileHash, price, function (status) {
         util.loading(false);

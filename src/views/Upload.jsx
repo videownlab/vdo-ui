@@ -125,7 +125,7 @@ function Home(props) {
       }
       return false;
     }
-    a=a.address;
+    a = a.address;
     // let address = ("0x263158a10b39debac59bd1239bc64fb4bd678f507814d24f59efd46279111c71", 11330)
     setAddr(a);
     addressG = a;
@@ -180,7 +180,7 @@ function Home(props) {
       }
       let hasStartProgress = false;
       apiS.tx.oss
-        .authorize("cXiKthh2dyY1taTydtdxiqQwXY1HKZcXvYGmjS2UmuPi2qNDS")
+        .authorize(webconfig.gatewayAddr)
         .signAndSend(
           addr,
           { signer: injector.signer },
@@ -259,20 +259,22 @@ function Home(props) {
     }
     // timeout = setTimeout(startQuerySpace, 300);
   };
-
-  useEffect(() => {
-    console.log("******************************useEffect start");
+  const isAuthority = async () => {
+    let res = await queryAuthorityList();
+    console.log('isAuthority', res);
+    if (res.msg != 'ok' || !res.data || res.data.length == 0) return false;
+    return res.data.includes(webconfig.gatewayAddr);
+  }
+  const init = async () => {
+    let isOK=await isAuthority();
+    setSpaceAuth(isOK);
     startQuerySpace();
-    let tmp = store.get("spaceAuth");
-    console.log("------------------", tmp);
-    if (tmp && tmp == addressG) {
-      // has authorize
-      setSpaceAuth(true);
-    }
-    console.log("******************************useEffect end");
     window.onUpdateSpace = function () {
       querySpace();
     };
+  }
+  useEffect(() => {
+    init();
     return () => {
       window.onUpdateSpace = null;
     };
@@ -284,7 +286,7 @@ function Home(props) {
   const onChangeAbout = (e) => {
     setAbout(e.target.value);
   };
-  const onSubmit =async () => {
+  const onSubmit = async () => {
     await querySpace();
     if (!name || name.length < 4) {
       return util.alert("NFT name is required and min length 4 char");
@@ -342,12 +344,12 @@ function Home(props) {
       setFileSize(file.size);
       let ext = file.name.split('.');
       ext = ext[ext.length - 1];
-      ext=ext.toLocaleLowerCase();
-      if (".png,.jpg,.jpeg,.gif,.bmp,.webp".includes(ext)){
+      ext = ext.toLocaleLowerCase();
+      if (".png,.jpg,.jpeg,.gif,.bmp,.webp".includes(ext)) {
         setFilter('pictures');
-      }else{
+      } else {
         setFilter('video');
-      }        
+      }
     },
     async onChange(info) {
       const { status, response } = info.file;
@@ -735,7 +737,7 @@ function Home(props) {
         <font color="red">*</font>Name
       </h3>
       <div className="input-box">
-        <Input onChange={onChangeName} placeholder="Max length 45" />
+        <Input onChange={onChangeName} maxLength={45} placeholder="Max length 45" />
       </div>
       <h3>
         <font color="red">*</font>NFT Description

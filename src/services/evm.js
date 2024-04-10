@@ -75,7 +75,10 @@ async function connectEvmWallet() {
         while (!window.api || !window.keyring) {
             await sleep(0.5);
         }
-
+        if(!window.ethereum){
+            alert('Please install a EVM wallet');
+            return null;
+        }
         walletClient = createWalletClient({ chain: mainnet, transport: custom(window.ethereum) });
         const [address] = await walletClient.requestAddresses();
         console.log({ address, road: 'there' })
@@ -106,7 +109,11 @@ async function connectEvmWallet() {
         return ret;
     } catch (e) {
         console.log(e);
-        return { msg: e.message };
+        let msg = e.message;
+        if (msg.includes('rejected')) {
+           return null;
+        }
+        return { msg };
     }
 }
 async function submitTx(extrinsic) {

@@ -18,6 +18,7 @@ import Img from "../components/Img";
 import store from "../utils/store";
 import { formatBalance, formatterSize } from "../utils/formatter";
 import { alist, transfer } from "../services/nft";
+import webconfig from "../webconfig";
 import * as util from "../utils";
 import { encodeAddress } from "@polkadot/util-crypto";
 import {
@@ -149,7 +150,7 @@ function Home({ className }) {
       }
       let hasStartProgress = false;
       apiS.tx.oss
-        .authorize("cXiKthh2dyY1taTydtdxiqQwXY1HKZcXvYGmjS2UmuPi2qNDS")
+        .authorize(webconfig.gatewayAddr)
         .signAndSend(
           addr,
           { signer: injector.signer },

@@ -29,6 +29,12 @@ async function init() {
 }
 function getAccount() {
   return new Promise(async (resolve, reject) => {
+    let accountType = store.get('accountType');
+    if (accountType != 'wallet') {
+      let account = store.get('account');
+      return resolve(account);
+    }
+
     const extensions = await web3Enable("my cool dapp");
     if (extensions.length === 0) {
       console.log("extensions.length=0");

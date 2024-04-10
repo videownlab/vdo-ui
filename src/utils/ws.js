@@ -1,17 +1,6 @@
 import webconfig from "../webconfig";
 export function connectStart(uploadId, onMessage, onClose) {
-  let wsUrl = webconfig.videoApiUrl;
-  if (wsUrl.indexOf("http") == -1) {
-    wsUrl = "ws://" + window.location.host+wsUrl;
-  } else {
-    wsUrl = wsUrl.replace("http", "ws");
-  }
-  wsUrl += "/upload-progress/" + uploadId;
-  
-
-  wsUrl="wss://videown.io/upload-progress/"+uploadId;
-
-
+  let wsUrl = webconfig.websocketApiUrl+uploadId;
   let websocket = new WebSocket(wsUrl);
   websocket.onerror = function () {
     console.log("websocket error");

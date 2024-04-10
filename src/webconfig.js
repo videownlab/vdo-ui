@@ -1,12 +1,12 @@
 import store from "./utils/store";
 
 let defaultConfig = {
-  videoApiUrl: "/cmps",
-  apiUrl: '/vd',
-  // videoApiUrl: "http://221.122.79.5:8081",
-  // apiUrl: 'http://221.122.79.5:5001',
-  // videoApiUrl: "http://39.108.54.98:3008",
-  // apiUrl: "http://39.108.54.98:3007",
+  // videoApiUrl: "/cmps",
+  // apiUrl: '/vd',
+  // websocketApiUrl:"wss://videown.io/upload-progress/",
+  videoApiUrl: "http://39.108.54.98:3008",
+  apiUrl: "http://39.108.54.98:3007",
+  websocketApiUrl:"ws://221.122.79.5:8081/upload-progress/",
   nodeURLs: [
     'wss://testnet-rpc0.cess.cloud/ws/',
     'wss://testnet-rpc1.cess.cloud/ws/',
@@ -49,6 +49,7 @@ export default {
   isUpgrading: false,
   videoApiUrl: getConfig("videoApiUrl"),
   apiUrl: getConfig("apiUrl"),
+  websocketApiUrl: getConfig("websocketApiUrl"),
   contractAddress: getConfig("contractAddress"),
   gatewayAddr: getConfig("gatewayAddr"),
   wsnode: {

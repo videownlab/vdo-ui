@@ -2,6 +2,7 @@ import { getCessSdk, getAPI } from "../utils/init-polkadot-api";
 import { message } from "antd";
 import { request } from "../utils";
 import store from "../utils/store";
+import webconfig from "../webconfig";
 
 let bucket = null;
 let space2 = null;
@@ -76,5 +77,5 @@ async function authorize() {
     }
     await init();
     let api =await getAPI();
-    return submitExtrinsic(api.tx.oss.authorize(acc.address));
+    return submitExtrinsic(api.tx.oss.authorize(webconfig.gatewayAddr));
 }

@@ -53,8 +53,8 @@ import {
   queryFileList,
   uploadFile,
   downloadFile,
-  queryFileMetadata,
-  deleteFile,
+  subscribeBalance,
+  subscribeUserOwnedSpace,
 } from "../services/oss";
 import * as emailUserTx from "../services/email-user-tx";
 import evm from "../services/evm";
@@ -94,6 +94,18 @@ const SearchBar = ({ className }) => {
       ignore = true;
     };
   }, []);
+
+  // const sub = async (acc) => {
+  //   let addr =  store.getAddress();
+  //   if(!addr) return;
+  //   console.log('start sub balance');
+  //   subscribeBalance(addr, res => {
+  //     acc.balance = res.free;
+  //     acc.balance_str = res.free + " TCESS";
+  //     saveAccount(acc);
+  //     console.log('sub balance return', res);
+  //   });
+  // }
 
   const myinit = async () => {
     setLoading(true);

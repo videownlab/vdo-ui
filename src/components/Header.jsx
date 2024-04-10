@@ -48,6 +48,11 @@ import * as antdHelper from "../utils/antd-helper";
 import webconfig from "../webconfig";
 import BuySpace from "../components/BuySpace";
 import { loginByWallet, applyCode, loginByEmail } from "../services/auth";
+import {
+  subscribeUserOwnedSpace,
+  subscribeBalance
+} from "../services/oss";
+import { getConfig } from "../services/auth";
 
 import { web3Accounts, web3Enable, web3FromAddress, web3FromSource } from '@polkadot/extension-dapp';
 import copy from "copy-to-clipboard";
@@ -92,6 +97,8 @@ function Header({ className }) {
   const [isSpaceModalOpen, setIsSpaceModalOpen] = useState(false);
   const [isAccountsModalOpen, setIsAccountsModalOpen] = useState(false);
   const [isModalConfig, setIsModalConfig] = useState(false);
+  const [balanceStr, setBalanceStr] = useState('0');
+
 
   const [account, setAccount] = useState();
   const [accounts, setAccounts] = useState();
@@ -105,6 +112,7 @@ function Header({ className }) {
   const [config, setConfig] = useState({});
 
   useEffect(() => {
+    getConfig();
     getAPI().then((t) => {
     }, console.log);
     setConfig({
@@ -112,13 +120,48 @@ function Header({ className }) {
       apiUrl: webconfig.apiUrl,
       contractAddress: webconfig.contractAddress
     });
+    let acc = store.get("account");
+    if (acc) {
+      saveAccount(acc);
+    }
     let accs = store.get("accounts");
     if (accs && accs.length > 0) {
       setAccounts(accs);
-      saveAccount(accs[0]);
+      if (acc) {
+        subBalance(acc, accs);
+      }
     }
     window.setConnecting = setConnecting;
   }, []);
+
+  const subBalance = async (acc, accs) => {
+    if (!acc) {
+      acc = account;
+    }
+    if (!acc) {
+      return;
+    }
+    console.log('start sub balance');
+    subscribeBalance(acc.address, res => {
+      acc.balance = res.free;
+      acc.balance_str = res.free + " TCESS";
+      setBalanceStr(res.free + " TCESS");
+      saveAccount(acc);
+      store.set("account", acc);
+      if (!accs || accs.length == 0) {
+        return console.log('accs not found');
+      }
+      accs.forEach(t => {
+        if (t.address == acc.address) {
+          t.balance = acc.balance;
+          t.balance_str = acc.balance_str;
+        }
+      });
+      setAccounts(accs);
+      store.set("accounts", accs);
+      console.log('sub balance return', res);
+    });
+  }
 
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
@@ -230,6 +273,7 @@ function Header({ className }) {
           store.set("accountType", 'wallet');
           store.set("token", ret.ok.token);
           setModalOpen(false);
+          subBalance(account, accounts);
         } else if (ret.error?.msg) {
           antdHelper.alertError(ret.error.msg);
         } else {
@@ -249,6 +293,9 @@ function Header({ className }) {
       setLoading(true);
       let ret = await evm.connectEvmWallet();
       lock = false;
+      if (!ret) {
+        return;
+      }
       if (ret.msg != 'ok') {
         return antdHelper.alertError(ret.msg);
       }
@@ -257,6 +304,7 @@ function Header({ className }) {
       saveAccount(account);
       antdHelper.notiOK("Login success");
       setModalOpen(false);
+      subBalance(account, [account]);
     } catch (e) {
       console.log(e);
     } finally {
@@ -287,6 +335,7 @@ function Header({ className }) {
         store.set("accounts", [account]);
         saveAccount(account);
         localStorage.setItem("addr", account.address);
+        subBalance(account, [account]);
       } else if (ret.error?.msg) {
         antdHelper.alertError(ret.error.msg);
       } else {
@@ -298,8 +347,9 @@ function Header({ className }) {
   }
   const saveAccount = async (account) => {
     setAccount(account);
+    setBalanceStr(account.balance_str);
     store.set("account", account);
-    console.log("saveAccount", account);
+    // console.log("saveAccount", account);
     if (account) {
       let publicKey = toPublickKey(account.address);
       localStorage.setItem("publicKey", publicKey);
@@ -330,6 +380,7 @@ function Header({ className }) {
   };
   const onSwitchAccount = (item) => {
     saveAccount(item);
+    store.set('account', item);
     window.location.reload();
   };
 
@@ -439,7 +490,7 @@ function Header({ className }) {
                   {formatAddress(account.address)}
                 </span>
                 <span className="balance-text">
-                  {account.balance_str || "**"}
+                  {balanceStr || "**"}
                 </span>
               </span>
               <span

@@ -18,6 +18,7 @@ export function loginByEvm(ethAddress, dotAddress, timestamp, sign) {
   return request.put("/auth/login-by-eth", { data });
 }
 export async function getConfig() {
+  console.log('get config')
   let res = await request.get("/config");
   if (!res || !res.ok) {
     return null;
@@ -34,4 +35,3 @@ export async function getConfig() {
   store.set('webconfig', config);
   return config;
 }
-
