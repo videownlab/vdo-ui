@@ -1,12 +1,12 @@
 import store from "./utils/store";
 
 let defaultConfig = {
-  // videoApiUrl: "/cmps",
-  // apiUrl: '/vd',
-  // websocketApiUrl:"wss://videown.io/upload-progress/",
-  videoApiUrl: "http://39.108.54.98:3008",
-  apiUrl: "http://39.108.54.98:3007",
-  websocketApiUrl:"ws://221.122.79.5:8081/upload-progress/",
+  videoApiUrl: "/cmps",
+  apiUrl: '/vd',
+  websocketApiUrl:"wss://videown.io/upload-progress/",
+  // videoApiUrl: "http://39.108.54.98:3008",
+  // apiUrl: "http://39.108.54.98:3007",
+  // websocketApiUrl:"ws://221.122.79.5:8081/upload-progress/",
   nodeURLs: [
     'wss://testnet-rpc0.cess.cloud/ws/',
     'wss://testnet-rpc1.cess.cloud/ws/',
