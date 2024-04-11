@@ -4,10 +4,8 @@ WORKDIR /apps
 
 COPY package.json .
 COPY package-lock.json .
-RUN yarn install
 
 COPY . .
-RUN yarn run build
 
 # ===========================================================
 FROM nginx:stable-alpine
