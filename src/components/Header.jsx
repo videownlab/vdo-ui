@@ -20,7 +20,7 @@ import {
   SwapOutlined,
   CheckOutlined,
   UserOutlined,
-  UnorderedListOutlined,
+  CopyOutlined,
   DatabaseOutlined,
 } from "@ant-design/icons";
 import {
@@ -52,7 +52,7 @@ import {
   subscribeUserOwnedSpace,
   subscribeBalance
 } from "../services/oss";
-import { getConfig } from "../services/auth";
+import { getConfig, getTimestamp } from "../services/auth";
 
 import { web3Accounts, web3Enable, web3FromAddress, web3FromSource } from '@polkadot/extension-dapp';
 import copy from "copy-to-clipboard";
@@ -249,7 +249,12 @@ function Header({ className }) {
         // openAccountBox(accounts);
 
         let address = account.address;
-        let timestamp = parseInt(new Date().valueOf() / 1000);
+        let timestamp = await getTimestamp();//  
+        if (timestamp && timestamp.ok) {
+          timestamp = timestamp.ok;
+        } else {
+          timestamp = parseInt(new Date().valueOf() / 1000);
+        }
 
         const injector = await web3FromSource(account.meta?.source);
         const signRaw = injector?.signer?.signRaw;
@@ -347,7 +352,9 @@ function Header({ className }) {
   }
   const saveAccount = async (account) => {
     setAccount(account);
-    setBalanceStr(account.balance_str);
+    if (account?.balance_str) {
+      setBalanceStr(account.balance_str);
+    }
     store.set("account", account);
     // console.log("saveAccount", account);
     if (account) {
@@ -715,11 +722,14 @@ function Header({ className }) {
                         size={36}
                         theme={"polkadot"}
                         style={{ marginTop: 0 }}
-                        onCopy={() => copy(item.address)}
+                        onCopy={() => antdHelper.onCopy(item.address)}
                       />
                     }
                     title={item.meta?.name || formatAddress(item.address)}
-                    description={formatAddressLong(item.address)}
+                    description={<div className="addr-line">
+                      <span className="addr-txt">{formatAddressLong(item.address)} </span>
+                      <label className="addr-copy" style={{ color: '#2668bd', cursor: "copy" }} onClick={() => antdHelper.onCopy(item.address)}> <CopyOutlined /></label>
+                    </div>}
                   />
                   <div>{item.balance_str}</div>
                 </List.Item>
@@ -749,7 +759,7 @@ function Header({ className }) {
                 size="large"
                 icon={<UserOutlined />}
               >
-                Profile cllected
+                Profile
               </Button>
               <Button
                 onClick={() => setIsAccountsModalOpen(false)}

@@ -31,7 +31,7 @@ export function shareFile(url) {
               className="btn btn-primary"
               onClick={() => {
                 copy(url);
-                notiOK("Copy successful");
+                notiOK("Copied");
               }}
             >
               Copy
@@ -105,4 +105,9 @@ export function alertError(title) {
   Modal.error({
     title,
   });
+}
+export function onCopy(txt) {
+  console.log('Copied',txt);
+  copy(txt);
+  notiOK("Copied");
 }

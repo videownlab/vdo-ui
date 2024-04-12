@@ -1,6 +1,4 @@
-FROM node:18-alpine3.19 as builder
-ARG http_proxy
-ARG https_proxy
+FROM node:16-alpine3.15 as builder
 
 WORKDIR /apps
 

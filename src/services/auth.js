@@ -2,6 +2,9 @@ import { request } from "../utils";
 import store from "../utils/store";
 import webconfig from "../webconfig";
 
+export function getTimestamp() {
+  return request.get("/auth/ts");
+}
 export function loginByWallet(data) {
   return request.put("/auth/login-by-dot", { data });
 }

@@ -4,7 +4,7 @@ import { userOwnedSpace } from "./oss";
 import { hexToString } from "@polkadot/util";
 import { getMappingAccount, signAndSendEvm, signMessage } from 'evm-account-mapping-sdk'
 import { custom, createWalletClient } from 'viem'
-import { loginByEvm } from "./auth";
+import { loginByEvm, getTimestamp } from "./auth";
 import store from "../utils/store";
 import { mainnet } from 'viem/chains'
 import webconfig from "../webconfig";
@@ -75,7 +75,7 @@ async function connectEvmWallet() {
         while (!window.api || !window.keyring) {
             await sleep(0.5);
         }
-        if(!window.ethereum){
+        if (!window.ethereum) {
             alert('Please install a EVM wallet');
             return null;
         }
@@ -93,7 +93,12 @@ async function connectEvmWallet() {
         store.set("accounts", [acc]);
         store.set("identity", acc.address);
         store.set("accountType", 'evm');
-        let timestamp = parseInt(new Date().valueOf() / 1000);
+        let timestamp = await getTimestamp();//  
+        if (timestamp && timestamp.ok) {
+            timestamp = timestamp.ok;
+        } else {
+            timestamp = parseInt(new Date().valueOf() / 1000);
+        }
         let randomStr = acc.evmAddress + acc.address + timestamp;
 
         let sign = await signMessage(walletClient, { address: ma.evmAddress }, randomStr);
@@ -111,7 +116,7 @@ async function connectEvmWallet() {
         console.log(e);
         let msg = e.message;
         if (msg.includes('rejected')) {
-           return null;
+            return null;
         }
         return { msg };
     }
